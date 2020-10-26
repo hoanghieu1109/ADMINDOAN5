@@ -13,7 +13,7 @@ declare var $: any;
 })
 export class ProductComponent extends BaseComponent implements OnInit {
 
-  public QLSach: any;
+  public sachs: any;
   public sach: any;
   public totalRecords:any;
   public pageSize = 3;
@@ -24,6 +24,7 @@ export class ProductComponent extends BaseComponent implements OnInit {
   public doneSetupForm: any;  
   public showUpdateModal:any;
   public isCreate:any;
+  allloai:any;
   submitted = false;
   @ViewChild(FileUpload, { static: false }) file_image: FileUpload;
   constructor(private fb: FormBuilder, injector: Injector) {
@@ -32,17 +33,18 @@ export class ProductComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.formsearch = this.fb.group({
-      'hoten': [''],
-      'taikhoan': [''],     
+      'tenSach': [''],
+      'giaBan': [''],     
     });
    
    this.search();
   }
 
   loadPage(page) { 
-    this._api.post('/api/QLSach/search',{page: page, pageSize: this.pageSize}).takeUntil(this.unsubscribe).subscribe(res => {
-      this.QLSach = res.data;
-      this.totalRecords =  res.totalItems;
+    this._api.post('/api/sach/search',{page: page, pageSize: this.pageSize}).takeUntil(this.unsubscribe).subscribe(res => {
+      this.sachs = res.data;
+      
+      this.totalRecords =  res.totalSachs;
       this.pageSize = res.pageSize;
       });
   } 
@@ -50,41 +52,44 @@ export class ProductComponent extends BaseComponent implements OnInit {
   search() { 
     this.page = 1;
     this.pageSize = 5;
-    this._api.post('/api/QLSach/search',{page: this.page, pageSize: this.pageSize, hoten: this.formsearch.get('hoten').value, taikhoan: this.formsearch.get('taikhoan').value}).takeUntil(this.unsubscribe).subscribe(res => {
-      this.QLSach = res.data;
-      this.totalRecords =  res.totalItems;
+    this._api.post('/api/sach/search',{page: this.page, pageSize: this.pageSize, ten: this.formsearch.get('tenSach').value, gia: this.formsearch.get('giaBan').value}).takeUntil(this.unsubscribe).subscribe(res => {
+      this.sachs = res.data;
+      console.log(this.sachs);
+      this.totalRecords =  res.totalSachs;
       this.pageSize = res.pageSize;
       });
   }
 
-  pwdCheckValidator(control){
-    var filteredStrings = {search:control.value, select:'@#!$%&*'}
-    var result = (filteredStrings.select.match(new RegExp('[' + filteredStrings.search + ']', 'g')) || []).join('');
-    if(control.value.length < 6 || !result){
-        return {matkhau: true};
-    }
-  }
+  // pwdCheckValidator(control){
+  //   var filteredStrings = {search:control.value, select:'@#!$%&*'}
+  //   var result = (filteredStrings.select.match(new RegExp('[' + filteredStrings.search + ']', 'g')) || []).join('');
+  //   if(control.value.length < 6 || !result){
+  //       return {matkhau: true};
+  //   }
+  // }
 
   get f() { return this.formdata.controls; }
 
   onSubmit(value) {
     this.submitted = true;
-    if (this.formdata.invalid) {
-      return;
-    } 
+     if (this.formdata.invalid) {
+       return;
+     } 
     if(this.isCreate) { 
       this.getEncodeFromImage(this.file_image).subscribe((data: any): void => {
         let data_image = data == '' ? null : data;
         let tmp = {
-           anhBia:data_image,
-        
-           tenSach:value.tenSach,
-           moTa:value.moTa,
-           maChuDe:value.maChuDe,
-           maNXB:value.maNXB,
-                    
+          AnhBia:data_image,
+           TenSach:value.TenSach,
+           MaChuDe:value.MaChuDe,
+           MaNXB:value.MaNXB,
+           MoTa:value.MoTa,
+           SoLuongTon:value.SoLuongTon,
+           GiaBan: +value.GiaBan,           
           };
-        this._api.post('/api/QLSach/create-sach',tmp).takeUntil(this.unsubscribe).subscribe(res => {
+          console.log(tmp);
+        this._api.post('/api/Sach/create-sach',tmp).takeUntil(this.unsubscribe).subscribe(res => {
+          debugger;
           alert('Thêm thành công');
           this.search();
           this.closeModal();
@@ -94,15 +99,16 @@ export class ProductComponent extends BaseComponent implements OnInit {
       this.getEncodeFromImage(this.file_image).subscribe((data: any): void => {
         let data_image = data == '' ? null : data;
         let tmp = {
-          anhBia:data_image,
-          maSach:value.maSach,
-          tenSach:value.tenSach,
-          moTa:value.moTa,
-          maChuDe:value.maChuDe,
-          maNXB:value.maNXB,
-          //  sach_id:this.sach.sach_id,          
+          AnhBia:data_image,
+          TenSach:value.TenSach,
+          MaChuDe:value.MaChuDe,
+          MaNXB:value.MaNXB,
+          MoTa:value.MoTa,
+          GiaBan: +value.GiaBan,
+          SoLuongTon:value.SoLuongTon,
+          MaSach:this.sach.MaSach,             
           };
-        this._api.post('/api/QLSach/update-sach',tmp).takeUntil(this.unsubscribe).subscribe(res => {
+        this._api.post('/api/sach/update-sach',tmp).takeUntil(this.unsubscribe).subscribe(res => {
           alert('Cập nhật thành công');
           this.search();
           this.closeModal();
@@ -111,9 +117,8 @@ export class ProductComponent extends BaseComponent implements OnInit {
     }
    
   } 
-
   onDelete(row) { 
-    this._api.post('/api/QLSach/delete-sach',{maSach:row.maSach}).takeUntil(this.unsubscribe).subscribe(res => {
+    this._api.post('/api/sach/delete-sach',{MaSach:row.MaSach}).takeUntil(this.unsubscribe).subscribe(res => {
       alert('Xóa thành công');
       this.search(); 
       });
@@ -122,17 +127,14 @@ export class ProductComponent extends BaseComponent implements OnInit {
   Reset() {  
     this.sach = null;
     this.formdata = this.fb.group({
-      'masach': ['', Validators.required],
-      'tensach': ['', Validators.required],
-      'mota': ['', Validators.required],
-      'anhbia': ['', Validators.required],
-      'machude': ['', Validators.required],
-      'manxb': ['', Validators.required],
-    }, {
-      validator: MustMatch('matkhau', 'nhaplaimatkhau')
+      'TenSach': ['', Validators.required],
+      'MoTa': ['', Validators.required],
+      'MaChuDe': ['',Validators.required,],
+      'MaNXB': ['', Validators.required],
+      'GiaBan': ['', [Validators.required]],
+      'SoLuongTon': ['', Validators.required],
     }); 
   }
-
   createModal() {
     this.doneSetupForm = false;
     this.showUpdateModal = true;
@@ -141,21 +143,13 @@ export class ProductComponent extends BaseComponent implements OnInit {
     setTimeout(() => {
       $('#createsachModal').modal('toggle');
       this.formdata = this.fb.group({
-        'hoten': ['', Validators.required],
-        'ngaysinh': ['', Validators.required],
-        'diachi': [''],
-        'gioitinh': ['', Validators.required],
-        'email': ['', [Validators.required,Validators.email]],
-        'taikhoan': ['', Validators.required],
-        'matkhau': ['', [this.pwdCheckValidator]],
-        'nhaplaimatkhau': ['', Validators.required],
-        'role': ['', Validators.required],
-      }, {
-        validator: MustMatch('matkhau', 'nhaplaimatkhau')
+        'TenSach': ['',Validators.required],
+        'MoTa': ['',Validators.required],
+        'MaChuDe': ['',Validators.required],
+        'MaNXB': ['', Validators.required],
+        'GiaBan': ['', Validators.required],
+        'SoLuongTon': ['', Validators.required],
       });
-      this.formdata.get('ngaysinh').setValue(this.today);
-      this.formdata.get('gioitinh').setValue(this.genders[0].value); 
-      this.formdata.get('role').setValue(this.roles[0].value);
       this.doneSetupForm = true;
     });
   }
@@ -166,29 +160,22 @@ export class ProductComponent extends BaseComponent implements OnInit {
     this.isCreate = false;
     setTimeout(() => {
       $('#createsachModal').modal('toggle');
-      this._api.get('/api/QLSach/get-by-id/'+ row.sach_id).takeUntil(this.unsubscribe).subscribe((res:any) => {
+      this._api.get('/api/sach/get-by-id/'+ row.MaSach).takeUntil(this.unsubscribe).subscribe((res:any) => {
         this.sach = res; 
-        let ngaysinh = new Date(this.sach.ngaysinh);
           this.formdata = this.fb.group({
-            'hoten': [this.sach.hoten, Validators.required],
-            'ngaysinh': [ngaysinh, Validators.required],
-            'diachi': [this.sach.diachi],
-            'gioitinh': [this.sach.gioitinh, Validators.required],
-            'email': [this.sach.email, [Validators.required,Validators.email]],
-            'taikhoan': [this.sach.taikhoan, Validators.required],
-            'matkhau': [this.sach.matkhau, [this.pwdCheckValidator]],
-            'nhaplaimatkhau': [this.sach.matkhau, Validators.required],
-            'role': [this.sach.role, Validators.required],
-          }, {
-            validator: MustMatch('matkhau', 'nhaplaimatkhau')
+            'MaSach': [this.sach.MaSach, Validators.required],
+            'TenSach': [this.sach.TenSach, Validators.required],
+            'GiaBan': [this.sach.GiaBan, Validators.required],
+            'MoTa': [this.sach.MoTa, Validators.required],
+            'MaChuDe': [this.sach.MaChuDe, Validators.required],
+            'MaNXB': [this.sach.MaNXB, Validators.required],
+            'SoLuongTon': [this.sach.SoLuongTon, Validators.required],
           }); 
           this.doneSetupForm = true;
         }); 
     }, 700);
   }
-
   closeModal() {
     $('#createsachModal').closest('.modal').modal('hide');
   }
 }
-
