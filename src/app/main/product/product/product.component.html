@@ -23,7 +23,7 @@
           <div class="form-group">
             <label class="col-sm-1 control-label no-padding-right">Tên sách</label>
             <div class="col-sm-11">
-              <input formControlName="tenSach"  type="text" placeholder="Tên sản phẩm" />
+              <input formControlName="tensach"  type="text" placeholder="Tên sản phẩm" />
             </div>
           </div>
          
@@ -41,8 +41,10 @@
             <th style="width: 50px; text-align: center;">STT</th>
             <th style="width: 50px; text-align: left;">Mã sách</th>
             <th style="width: 10%; text-align: left;">Tên sách</th>
-            <th style="width: 8%; text-align: left;">Hình ảnh</th>
-            <th style="width: 45%; text-align: left;">Mô tả</th>
+            <th style="width: 6%; text-align: left;">Hình ảnh</th>
+            <th style="width: 40%; text-align: left;">Mô tả</th>
+            <th style="width: 50px; text-align: left;">Mã CD</th>
+            <th style="width: 50px; text-align: left;">Mã NXB</th>
             <th style="width: 50px; text-align: left;">Số lượng tồn</th>
             <th style="width: 60px; text-align: left;">Giá bán</th>
             <th style="width: 120px; text-align: left;">Tác vụ</th>
@@ -51,12 +53,14 @@
         <ng-template pTemplate="body" let-item  let-i="rowIndex">
           <tr>
             <td style="width: 100px; text-align: center;">{{ i + 1 }}</td>
-            <td>{{ item.maSach }}</td>
-            <td>{{ item.tenSach }}</td>
-            <td><img style="width:70px;" src="../assets/images/{{item.anhBia}}"/></td>
-            <td>{{ item.moTa }}</td>
-            <td>{{ item.soLuongTon }}</td>
-            <td>{{ item.giaBan }}</td>
+            <td>{{ item.masach }}</td>
+            <td>{{ item.tensach }}</td>
+            <td><img style="width:70px;" src="../assets/images/{{item.anhbia}}"/></td>
+            <td>{{ item.mota }}</td>
+            <td>{{ item.cd.tenchude }}</td>
+            <td>{{ item.nxb.tennxb }}</td>
+            <td>{{ item.soluongton }}</td>
+            <td>{{ item.giaban }}</td>
             <td class="action-col" >
               <div class="btn-group">
                 <button title="" class="btn btn-xs btn-white btn-default"  (click)="openUpdateModal(item)">  
@@ -78,7 +82,7 @@
     <!-- /.col -->
   </div>
   <!-- /.row -->
-  <div *ngIf="showUpdateModal" id="createsachModal" class="modal fade">
+  <div *ngIf="showUpdateModal" id="createUserModal" class="modal fade">
       <div class="modal-dialog modal-lg full-height-modal">
         <div class="modal-content">
           <div class="modal-header">
@@ -88,66 +92,65 @@
           <form *ngIf="doneSetupForm" [formGroup]="formdata"  (ngSubmit)="onSubmit(formdata.value)" class="form-horizontal utehy-form">
             <div class="modal-body no-padding">
               <div class="form-group">
-                <label class="col-sm-2 control-label no-padding-right"> Tên sản phẩm(<span style="color: red;">*</span>)</label>
+                <label class="col-sm-2 control-label no-padding-right"> Tên sản phẩm</label>
                 <div class="col-sm-5">
-                  <input type="text" placeholder="Tên sản phẩm" formControlName="tenSach"/>
-                  <div *ngIf="submitted && f.tenSach.errors" class="invalid-feedback">
-                    <div *ngIf="f.tenSach.errors.required">Tên sản phẩm là bắt buộc</div>
+                  <input type="text" placeholder="Tên sản phẩm" formControlName="tensach"/>
+                  <div *ngIf="submitted && f.tensach.errors" class="invalid-feedback">
+                    <div *ngIf="f.tensach.errors.required">Tên sản phẩm là bắt buộc</div>
                   </div>
-                  
-                    
                   </div>
                 </div>
               </div>
   
               <div class="form-group">
-                <label class="col-sm-2 control-label no-padding-right">Chủ đề(<span style="color: red;">*</span>)</label>
+                <label class="col-sm-2 control-label no-padding-right">Chủ đề</label>
                 <div class="col-sm-5">
-                  <input type="text" formControlName="maChuDe" placeholder="Chủ đề" />
-                  <div *ngIf="submitted && f.maChuDe.errors" class="invalid-feedback">
-                    <div *ngIf="f.maChuDe.errors.required">Chủ đề là bắt buộc</div>
+                 <select formControlName="machude" id="">
+                   <option *ngFor="let cd of chudes" [value]="cd.machude">{{cd.tenchude}}</option>
+                 </select>
+                  <div *ngIf="submitted && f.machude.errors" class="invalid-feedback">
+                    <div *ngIf="f.machude.errors.required">Chủ đề là bắt buộc</div>
                 </div>
                 </div>
               </div>
   
               <div class="form-group">
-                <label class="col-sm-2 control-label no-padding-right">Nhà xuất bản(<span style="color: red;">*</span>)</label>
+                <label class="col-sm-2 control-label no-padding-right">Nhà xuất bản</label>
                 <div class="col-sm-5">
-                  <input type="text" formControlName="maNXB" placeholder="Nhà xuất bản" />
-                  <div *ngIf="submitted && f.maNXB.errors" class="invalid-feedback">
-                    <div *ngIf="f.maNXB.errors.required">Nhà xuất bản là bắt buộc</div>
+                  <select formControlName="manxb" id="">
+                    <option *ngFor="let nxb of nxbs" [value]="nxb.manxb">{{nxb.tennxb}}</option>
+                  </select>
+                  <div *ngIf="submitted && f.manxb.errors" class="invalid-feedback">
+                    <div *ngIf="f.manxb.errors.required">Nhà xuất bản là bắt buộc</div>
                 </div>
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-sm-2 control-label no-padding-right">Số lượng tồn</label>
                 <div class="col-sm-10">
-                  <input type="text" formControlName="soLuongTon" placeholder="Số lượng tồn" />
+                  <input type="text" formControlName="soluongton" placeholder="Số lượng tồn" />
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-sm-2 control-label no-padding-right">Mô tả</label>
                 <div class="col-sm-10">
-                  <input type="text" formControlName="moTa" placeholder="Mô tả" />
+                  <input type="text" formControlName="mota" placeholder="Mô tả" />
                 </div>
               </div>
   
               <div class="form-group">
                 <label class="col-sm-2 control-label no-padding-right">Đơn giá</label>
                 <div class="col-sm-10">
-                  <input type="text" formControlName="giaBan" placeholder="Đơn giá" />
+                  <input type="text" formControlName="giaban" placeholder="Đơn giá" />
                 </div>
               </div>
-  
-  
-  
-  
+
               <div class="form-group">
                 <label class="col-sm-2 control-label no-padding-right"> Ảnh</label>
                 <div class="col-sm-10">
                   <p-fileUpload #file_image mode="advanced" [showUploadButton]="false" cancelLabel="Hủy" chooseLabel ="Chọn ảnh"   multiple="false" accept="image/*" maxFileSize="1000000">
                       <ng-template pTemplate="content">
-                          <img *ngIf="sach && sach.anhBia" style="height: 100px;width: 100px;" [src]="sach.anhBia">
+                          <img *ngIf="sach && sach.anhbia" style="height: 100px;width: 100px;" [src]="sach.anhbia">
                       </ng-template>
                 </p-fileUpload>
                 </div>

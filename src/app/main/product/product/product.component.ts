@@ -24,7 +24,8 @@ export class ProductComponent extends BaseComponent implements OnInit {
   public doneSetupForm: any;  
   public showUpdateModal:any;
   public isCreate:any;
-  allloai:any;
+  nxbs:any;
+  chudes:any;
   submitted = false;
   @ViewChild(FileUpload, { static: false }) file_image: FileUpload;
   constructor(private fb: FormBuilder, injector: Injector) {
@@ -33,12 +34,16 @@ export class ProductComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.formsearch = this.fb.group({
-      'tenSach': [''],
-      'giaBan': [''],     
+      'tensach': [''],
+      'giaban': [''],     
     });
    
    this.search();
+   this.allnxb();
+   this.allchude();
   }
+
+  
 
   loadPage(page) { 
     this._api.post('/api/sach/search',{page: page, pageSize: this.pageSize}).takeUntil(this.unsubscribe).subscribe(res => {
@@ -52,7 +57,7 @@ export class ProductComponent extends BaseComponent implements OnInit {
   search() { 
     this.page = 1;
     this.pageSize = 5;
-    this._api.post('/api/sach/search',{page: this.page, pageSize: this.pageSize, ten: this.formsearch.get('tenSach').value, gia: this.formsearch.get('giaBan').value}).takeUntil(this.unsubscribe).subscribe(res => {
+    this._api.post('/api/sach/search',{page: this.page, pageSize: this.pageSize, ten: this.formsearch.get('tensach').value, gia: this.formsearch.get('giaban').value}).takeUntil(this.unsubscribe).subscribe(res => {
       this.sachs = res.data;
       console.log(this.sachs);
       this.totalRecords =  res.totalSachs;
@@ -60,13 +65,6 @@ export class ProductComponent extends BaseComponent implements OnInit {
       });
   }
 
-  // pwdCheckValidator(control){
-  //   var filteredStrings = {search:control.value, select:'@#!$%&*'}
-  //   var result = (filteredStrings.select.match(new RegExp('[' + filteredStrings.search + ']', 'g')) || []).join('');
-  //   if(control.value.length < 6 || !result){
-  //       return {matkhau: true};
-  //   }
-  // }
 
   get f() { return this.formdata.controls; }
 
@@ -79,17 +77,18 @@ export class ProductComponent extends BaseComponent implements OnInit {
       this.getEncodeFromImage(this.file_image).subscribe((data: any): void => {
         let data_image = data == '' ? null : data;
         let tmp = {
-          AnhBia:data_image,
-           TenSach:value.TenSach,
-           MaChuDe:value.MaChuDe,
-           MaNXB:value.MaNXB,
-           MoTa:value.MoTa,
-           SoLuongTon:value.SoLuongTon,
-           GiaBan: +value.GiaBan,           
+           anhbia:data_image,
+           tensach:value.tensach,
+           machude:Number.parseInt(value.machude),
+           manxb:Number.parseInt(value.manxb), 
+           mota:value.mota,
+           soluongton:Number.parseInt(value.soluongton),
+           giaban: +value.giaban,           
           };
-          console.log(tmp);
-        this._api.post('/api/Sach/create-sach',tmp).takeUntil(this.unsubscribe).subscribe(res => {
+        
+        this._api.post('/api/sach/create-sach',tmp).takeUntil(this.unsubscribe).subscribe(res => {
           debugger;
+         
           alert('Thêm thành công');
           this.search();
           this.closeModal();
@@ -99,14 +98,14 @@ export class ProductComponent extends BaseComponent implements OnInit {
       this.getEncodeFromImage(this.file_image).subscribe((data: any): void => {
         let data_image = data == '' ? null : data;
         let tmp = {
-          AnhBia:data_image,
-          TenSach:value.TenSach,
-          MaChuDe:value.MaChuDe,
-          MaNXB:value.MaNXB,
-          MoTa:value.MoTa,
-          GiaBan: +value.GiaBan,
-          SoLuongTon:value.SoLuongTon,
-          MaSach:this.sach.MaSach,             
+          anhbia:data_image,
+          tensach:value.tensach,
+          machude:Number.parseInt(value.machude),
+          manxb:Number.parseInt(value.manxb),
+          mota:value.mota,
+          giaban: +value.giaban,
+          soluongton:Number.parseInt(value.soluongton),
+          masach:this.sach.masach,             
           };
         this._api.post('/api/sach/update-sach',tmp).takeUntil(this.unsubscribe).subscribe(res => {
           alert('Cập nhật thành công');
@@ -118,21 +117,29 @@ export class ProductComponent extends BaseComponent implements OnInit {
    
   } 
   onDelete(row) { 
-    this._api.post('/api/sach/delete-sach',{MaSach:row.MaSach}).takeUntil(this.unsubscribe).subscribe(res => {
+    this._api.post('/api/sach/delete-sach',{masach:row.masach}).takeUntil(this.unsubscribe).subscribe(res => {
       alert('Xóa thành công');
       this.search(); 
       });
   }
-
+allnxb(){
+  this._api.get('/api/nhaxuatban/get-all').takeUntil(this.unsubscribe).subscribe(res => {
+    this.nxbs=res;
+  });
+}
+allchude(){
+  this._api.get('/api/chude/get-all').takeUntil(this.unsubscribe).subscribe(res => {
+    this.chudes=res;
+  });}
   Reset() {  
     this.sach = null;
     this.formdata = this.fb.group({
-      'TenSach': ['', Validators.required],
-      'MoTa': ['', Validators.required],
-      'MaChuDe': ['',Validators.required,],
-      'MaNXB': ['', Validators.required],
-      'GiaBan': ['', [Validators.required]],
-      'SoLuongTon': ['', Validators.required],
+      'tensach': ['', Validators.required],
+      'mota': ['', Validators.required],
+      'machude': ['',Validators.required,],
+      'manxb': ['', Validators.required],
+      'giaban': ['', [Validators.required]],
+      'soluongton': ['', Validators.required],
     }); 
   }
   createModal() {
@@ -141,14 +148,14 @@ export class ProductComponent extends BaseComponent implements OnInit {
     this.isCreate = true;
     this.sach = null;
     setTimeout(() => {
-      $('#createsachModal').modal('toggle');
+      $('#createUserModal').modal('toggle');
       this.formdata = this.fb.group({
-        'TenSach': ['',Validators.required],
-        'MoTa': ['',Validators.required],
-        'MaChuDe': ['',Validators.required],
-        'MaNXB': ['', Validators.required],
-        'GiaBan': ['', Validators.required],
-        'SoLuongTon': ['', Validators.required],
+        'tensach': ['',Validators.required],
+        'machude': ['',Validators.required],
+        'manxb': ['', Validators.required],
+        'soluongton': ['', Validators.required],
+        'mota': ['',Validators.required],
+        'giaban': ['', Validators.required],
       });
       this.doneSetupForm = true;
     });
@@ -159,23 +166,24 @@ export class ProductComponent extends BaseComponent implements OnInit {
     this.showUpdateModal = true; 
     this.isCreate = false;
     setTimeout(() => {
-      $('#createsachModal').modal('toggle');
-      this._api.get('/api/sach/get-by-id/'+ row.MaSach).takeUntil(this.unsubscribe).subscribe((res:any) => {
+      $('#createUserModal').modal('toggle');
+      this._api.get('/api/sach/get-by-id/'+ row.masach).takeUntil(this.unsubscribe).subscribe((res:any) => {
         this.sach = res; 
           this.formdata = this.fb.group({
-            'MaSach': [this.sach.MaSach, Validators.required],
-            'TenSach': [this.sach.TenSach, Validators.required],
-            'GiaBan': [this.sach.GiaBan, Validators.required],
-            'MoTa': [this.sach.MoTa, Validators.required],
-            'MaChuDe': [this.sach.MaChuDe, Validators.required],
-            'MaNXB': [this.sach.MaNXB, Validators.required],
-            'SoLuongTon': [this.sach.SoLuongTon, Validators.required],
+            
+            'tensach': [this.sach.tensach, Validators.required],
+            'machude': [this.sach.machude, Validators.required],
+            'manxb': [this.sach.manxb, Validators.required],
+            'soluongton': [this.sach.soluongton, Validators.required],
+            'mota': [this.sach.mota, Validators.required],
+            'giaban': [this.sach.giaban, Validators.required],
+
           }); 
           this.doneSetupForm = true;
         }); 
     }, 700);
   }
   closeModal() {
-    $('#createsachModal').closest('.modal').modal('hide');
+    $('#createUserModal').closest('.modal').modal('hide');
   }
 }
