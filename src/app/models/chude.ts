@@ -1,4 +1,3 @@
-export class ChuDe {
-    machude: string;
+export class User {
     tenchude: string;
 }

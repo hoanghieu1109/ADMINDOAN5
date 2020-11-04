@@ -44,11 +44,9 @@ export class ProductComponent extends BaseComponent implements OnInit {
   }
 
   
-
   loadPage(page) { 
     this._api.post('/api/sach/search',{page: page, pageSize: this.pageSize}).takeUntil(this.unsubscribe).subscribe(res => {
       this.sachs = res.data;
-      
       this.totalRecords =  res.totalSachs;
       this.pageSize = res.pageSize;
       });
@@ -57,7 +55,7 @@ export class ProductComponent extends BaseComponent implements OnInit {
   search() { 
     this.page = 1;
     this.pageSize = 5;
-    this._api.post('/api/sach/search',{page: this.page, pageSize: this.pageSize, ten: this.formsearch.get('tensach').value, gia: this.formsearch.get('giaban').value}).takeUntil(this.unsubscribe).subscribe(res => {
+    this._api.post('/api/sach/search',{page: this.page, pageSize: this.pageSize, tensach: this.formsearch.get('tensach').value, giaban: this.formsearch.get('giaban').value}).takeUntil(this.unsubscribe).subscribe(res => {
       this.sachs = res.data;
       console.log(this.sachs);
       this.totalRecords =  res.totalSachs;
@@ -145,7 +143,7 @@ allchude(){
   createModal() {
     this.doneSetupForm = false;
     this.showUpdateModal = true;
-    this.isCreate = true;
+    this.isCreate = true; 
     this.sach = null;
     setTimeout(() => {
       $('#createUserModal').modal('toggle');

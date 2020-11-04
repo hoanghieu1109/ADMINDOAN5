@@ -51,10 +51,10 @@ export class TypeComponent extends BaseComponent implements OnInit {
   search() { 
     this.page = 1;
     this.pageSize = 5;
-    this._api.post('/api/chude/search',{page: this.page, pageSize: this.pageSize, ten: this.formsearch.get('tenchude').value, gia: this.formsearch.get('giaban').value}).takeUntil(this.unsubscribe).subscribe(res => {
+    this._api.post('/api/chude/search',{page: this.page, pageSize: this.pageSize, tenchude: this.formsearch.get('tenchude').value, gia: this.formsearch.get('giaban').value}).takeUntil(this.unsubscribe).subscribe(res => {
       this.chudes = res.data;
       console.log(this.chudes);
-      this.totalRecords =  res.totalchudes;
+      this.totalRecords =  res.totalsachs;
       this.pageSize = res.pageSize;
       });
   }
@@ -71,8 +71,7 @@ export class TypeComponent extends BaseComponent implements OnInit {
       this.getEncodeFromImage(this.file_image).subscribe((data: any): void => {
         let data_image = data == '' ? null : data;
         let tmp = {
-           tenchude:value.tenchude,
-           machude:value.machude,          
+           tenchude:value.tenchude,        
           };
           
         this._api.post('/api/chude/create-chude',tmp).takeUntil(this.unsubscribe).subscribe(res => {
@@ -84,7 +83,7 @@ export class TypeComponent extends BaseComponent implements OnInit {
       });
     } else { 
       this.getEncodeFromImage(this.file_image).subscribe((data: any): void => {
-        let data_image = data == '' ? null : data;
+        
         let tmp = {
           tenchude:value.tenchude,
           machude:this.chude.machude,             
@@ -109,7 +108,6 @@ export class TypeComponent extends BaseComponent implements OnInit {
     this.chude = null;
     this.formdata = this.fb.group({
       'tenchude': ['', Validators.required],
-      'machude': ['',Validators.required,],
     }); 
   }
   createModal() {
@@ -118,10 +116,9 @@ export class TypeComponent extends BaseComponent implements OnInit {
     this.isCreate = true;
     this.chude = null;
     setTimeout(() => {
-      $('#createchudeModal').modal('toggle');
+      $('#createUserModal').modal('toggle');
       this.formdata = this.fb.group({
         'tenchude': ['',Validators.required],
-        'machude': ['',Validators.required],
       });
       this.doneSetupForm = true;
     });
@@ -132,19 +129,17 @@ export class TypeComponent extends BaseComponent implements OnInit {
     this.showUpdateModal = true; 
     this.isCreate = false;
     setTimeout(() => {
-      $('#createchudeModal').modal('toggle');
+      $('#createUserModal').modal('toggle');
       this._api.get('/api/chude/get-by-id/'+ row.machude).takeUntil(this.unsubscribe).subscribe((res:any) => {
         this.chude = res; 
           this.formdata = this.fb.group({
             'tenchude': [this.chude.tenchude, Validators.required],
-            'machude': [this.chude.machude, Validators.required],
-
           }); 
           this.doneSetupForm = true;
         }); 
     }, 700);
   }
   closeModal() {
-    $('#createchudeModal').closest('.modal').modal('hide');
+    $('#createUserModal').closest('.modal').modal('hide');
   }
 }
