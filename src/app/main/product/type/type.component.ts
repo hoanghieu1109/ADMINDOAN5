@@ -51,7 +51,7 @@ export class TypeComponent extends BaseComponent implements OnInit {
   search() { 
     this.page = 1;
     this.pageSize = 5;
-    this._api.post('/api/chude/search',{page: this.page, pageSize: this.pageSize, tenchude: this.formsearch.get('tenchude').value, gia: this.formsearch.get('giaban').value}).takeUntil(this.unsubscribe).subscribe(res => {
+    this._api.post('/api/chude/get-all',{page: this.page, pageSize: this.pageSize, tenchude: this.formsearch.get('tenchude').value, gia: this.formsearch.get('giaban').value}).takeUntil(this.unsubscribe).subscribe(res => {
       this.chudes = res.data;
       console.log(this.chudes);
       this.totalRecords =  res.totalsachs;

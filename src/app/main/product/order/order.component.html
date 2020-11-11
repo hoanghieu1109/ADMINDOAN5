@@ -10,11 +10,130 @@
   <div class="page-content"> 
     <div class="row">
       <div class="col-xs-12">
-        <!-- PAGE CONTENT BEGINS --> 
-        Hi
-
+        <!-- PAGE CONTENT BEGINS -->
+        <p-panel header="Tìm kiếm" [style]="{'margin-top': '2px'}">
+          <form class="form-horizontal"  [formGroup]="formsearch"  (ngSubmit)="search()">
+            <div class="form-group">
+              <label class="col-sm-2 control-label no-padding-right">Tên khách hàng</label>
+              <div class="col-sm-10">
+                <input formControlName="ho_ten"  type="text" placeholder="Tên khách hàng" />
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="col-sm-2 control-label no-padding-right"></label>
+              <div class="col-sm-10">
+                <button (click)="search()" class="btn btn-sm btn-primary">Tìm kiếm</button>
+              </div>
+            </div>
+          </form> 
+        </p-panel>
+        <p-table selectionMode="single" [value]="orders" styleClass="p-datatable-gridlines">
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 70px; text-align: center;">STT</th>
+              <th style="width: 15%; text-align: left;">Tên khách hàng</th>
+              <th style="width: 15%; text-align: left;">Địa chỉ</th>
+              <th style="width: 15%; text-align: left;">Số điện thoại</th>
+              <th style="width: 15%; text-align: left;">Tổng tiền</th>
+            
+              
+              <th style="width: 120px; text-align: left;">Tác vụ</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item  let-i="rowIndex">
+            <tr>
+              <td style="width: 100px; text-align: center;">{{ i + 1 }}</td>
+              <td>{{ item.ho_ten }}</td>
+              <td>{{ item.dia_chi }}</td>
+              <td>{{ item.sdt }}</td>
+              <td>{{ item.total }}</td>
+              
+              <td class="action-col" >
+                <div class="btn-group">
+                  <button title="" class="btn btn-xs btn-white btn-default"  (click)="openUpdateModal(item)">  
+                    <i class="ace-icon fa fa-edit"></i>
+                  </button>
+                  
+                </div>  
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
         <!-- PAGE CONTENT ENDS -->
-      </div><!-- /.col -->
-    </div><!-- /.row -->
-  </div><!-- /.page-content -->
- 
+      </div>
+      <div class="col-xs-12" style="text-align: right;">
+        <ngb-pagination [collectionSize]="totalRecords" [pageSize]="pageSize" [(page)]="page" [maxSize]="10" [rotate]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+      </div>
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+    </div>
+    <div *ngIf="showUpdateModal" id="createUserModal" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-lg full-height-modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4  *ngIf="isCreate" class="modal-title">Thông tin đơn hàng</h4>
+            <h4 *ngIf="!isCreate" class="modal-title">Thông tin đơn hàng</h4>
+          </div>
+          <form *ngIf="doneSetupForm" [formGroup]="formdata"  (ngSubmit)="onSubmit(formdata.value)" class="form-horizontal utehy-form">
+            <div class="modal-body no-padding">
+              <div class="form-group">
+                <label class="col-sm-2 control-label no-padding-right">Họ Tên</label>
+                <div class="col-sm-10">
+                  <input disabled type="text" formControlName="ho_ten" placeholder="Họ Tên" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label no-padding-right">Địa Chỉ</label>
+                <div class="col-sm-10">
+                  <input disabled type="text" formControlName="dia_chi" placeholder="Địa Chỉ" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label no-padding-right">Số Điện Thoại</label>
+                <div class="col-sm-10">
+                  <input disabled type="text" formControlName="sdt" placeholder="Số Điẹn Thoại" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label no-padding-right">Total</label>
+                <div class="col-sm-10">
+                  <input disabled type="text" formControlName="order_total" placeholder="tổng tiền" />
+                </div>
+              </div>
+              <table class="table">
+                <thead>
+                  <tr>
+                  <th>Mã chi tiết đơn hàng</th>
+                  <th>Mã hóa đơn</th>
+                  <th>Mã sách</th>
+                  <th>số lượng</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let its of order.listjson_chitiet">
+                    <td>{{its.ma_chi_tiet}}</td>
+                    <td>{{its.ma_hoa_don}}</td>
+                    <td>{{its.masach}}</td>
+                    <td>{{its.so_luong}}</td>
+                  </tr>
+                </tbody>
+              </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default btn-sm" (click)="Reset()">
+              <i class="fa fa-bell"></i> Làm mới
+            </button>
+            <button type="submit" class="btn btn-success btn-sm btn-submit">
+              <i class="fa fa-save"></i> Đồng ý
+            </button>
+            <button type="button" class="btn btn-default btn-sm" (click)="closeModal()">
+              <i class="fa fa-times"></i> Đóng lại
+            </button>
+          </div>
+        </form>  
+        </div>
+      </div>
+     
+  
