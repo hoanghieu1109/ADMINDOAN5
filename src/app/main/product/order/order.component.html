@@ -105,18 +105,22 @@
               <table class="table">
                 <thead>
                   <tr>
-                  <th>Mã chi tiết đơn hàng</th>
-                  <th>Mã hóa đơn</th>
-                  <th>Mã sách</th>
+                  <th>Mã đơn hàng</th>
+                  <th>Mã sản phẩm</th>
+                  <th>Tên sách</th>
                   <th>số lượng</th>
+                  <th>Giá bán</th>
+                  <th>Thành tiền</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr *ngFor="let its of order.listjson_chitiet">
-                    <td>{{its.ma_chi_tiet}}</td>
                     <td>{{its.ma_hoa_don}}</td>
-                    <td>{{its.masach}}</td>
+                    <td>{{its.ma_sach}}</td>
+                    <td>{{its.tensach}}</td>
                     <td>{{its.so_luong}}</td>
+                    <td>{{its.giaban}}</td>
+                    <td>{{its.so_luong*its.giaban | currency:'VND'}}</td>
                   </tr>
                 </tbody>
               </table>
