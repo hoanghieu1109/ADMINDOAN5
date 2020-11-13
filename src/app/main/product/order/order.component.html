@@ -93,13 +93,13 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label no-padding-right">Số Điện Thoại</label>
                 <div class="col-sm-10">
-                  <input disabled type="text" formControlName="sdt" placeholder="Số Điẹn Thoại" />
+                  <input disabled type="text" formControlName="sdt" placeholder="Số Điện Thoại" />
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-sm-2 control-label no-padding-right">Total</label>
                 <div class="col-sm-10">
-                  <input disabled type="text" formControlName="order_total" placeholder="tổng tiền" />
+                  <input disabled type="text" formControlName="total" placeholder="tổng tiền" />
                 </div>
               </div>
               <table class="table">
@@ -116,11 +116,11 @@
                 <tbody>
                   <tr *ngFor="let its of order.listjson_chitiet">
                     <td>{{its.ma_hoa_don}}</td>
-                    <td>{{its.ma_sach}}</td>
+                    <td>{{its.masach}}</td>
                     <td>{{its.tensach}}</td>
                     <td>{{its.so_luong}}</td>
                     <td>{{its.giaban}}</td>
-                    <td>{{its.so_luong*its.giaban | currency:'VND'}}</td>
+                    <td>{{its.so_luong*its.giaban}} VNĐ</td>
                   </tr>
                 </tbody>
               </table>

@@ -69,7 +69,7 @@ export class OrderComponent extends BaseComponent implements OnInit {
       'ho_ten': ['', Validators.required],
       'dia_chi': ['', Validators.required],
       'sdt': ['', Validators.required],
-      'order_total': ['', Validators.required],
+      'total': ['', Validators.required],
     }, {
     
     }); 
@@ -117,6 +117,6 @@ export class OrderComponent extends BaseComponent implements OnInit {
   
 
   closeModal() {
-    $('#createsanphamModal').closest('.modal').modal('hide');
+    $('#createUserModal').closest('.modal').modal('hide');
   }
 }
