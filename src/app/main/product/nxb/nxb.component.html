@@ -4,7 +4,7 @@
         <i class="ace-icon fa fa-home home-icon"></i>
         <a href="#">Trang chủ</a>
       </li>
-      <li class="active">Quản lý chủ đề sách</li>
+      <li class="active">Quản lý nhà xuất bản</li>
     </ul><!-- /.breadcrumb -->
     <div class="nav-search">
       <p class="pull-right no-margin">
@@ -21,9 +21,9 @@
         <p-panel header="Tìm kiếm" [style]="{'margin-top': '2px'}">
           <form class="form-horizontal"  [formGroup]="formsearch"  (ngSubmit)="search()">
             <div class="form-group">
-              <label class="col-sm-1 control-label no-padding-right">Tên chủ đề</label>
+              <label class="col-sm-1 control-label no-padding-right">Tên nhà xuất bản</label>
               <div class="col-sm-11">
-                <input formControlName="tenchude"  type="text" placeholder="Tên chủ đề" />
+                <input formControlName="tennxb"  type="text" placeholder="Tên nhà xuất bản" />
               </div>
             </div>
            
@@ -35,20 +35,24 @@
             </div>
           </form> 
         </p-panel>
-        <p-table selectionMode="single" [value]="chudes" styleClass="p-datatable-gridlines">
+        <p-table selectionMode="single" [value]="nxbs" styleClass="p-datatable-gridlines">
           <ng-template pTemplate="header">
             <tr>
               <th style="width: 50px; text-align: center;">STT</th>
-              <th style="width: 50px; text-align: left;">Mã chủ đề</th>
-              <th style="width: 10%; text-align: left;">Tên chủ đề</th>
+              <th style="width: 50px; text-align: left;">Mã nhà xuất bản</th>
+              <th style="width: 10%; text-align: left;">Tên nhà xuất bản</th>
+              <th style="width: 10%; text-align: left;">Địa chỉ</th>
+              <th style="width: 10%; text-align: left;">Số điện thoại</th>
               <th style="width: 120px; text-align: left;">Tác vụ</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-item  let-i="rowIndex">
             <tr>
               <td style="width: 100px; text-align: center;">{{ i + 1 }}</td>
-              <td>{{ item.machude }}</td>
-              <td>{{ item.tenchude }}</td>
+              <td>{{ item.manxb }}</td>
+              <td>{{ item.tennxb }}</td>
+              <td>{{ item.diachi }}</td>
+              <td>{{ item.dienthoai }}</td>
               <td class="action-col" >
                 <div class="btn-group">
                   <button title="" class="btn btn-xs btn-white btn-default"  (click)="openUpdateModal(item)">  
@@ -74,21 +78,35 @@
         <div class="modal-dialog modal-lg full-height-modal">
           <div class="modal-content">
             <div class="modal-header">
-              <h4  *ngIf="isCreate" class="modal-title">Nhập thông tin chủ đề</h4>
-              <h4 *ngIf="!isCreate" class="modal-title">Sửa thông tin chủ đề</h4>
+              <h4  *ngIf="isCreate" class="modal-title">Nhập thông tin nhà xuất bản</h4>
+              <h4 *ngIf="!isCreate" class="modal-title">Sửa thông tin nhà xuất bản</h4>
             </div>
             <form *ngIf="doneSetupForm" [formGroup]="formdata"  (ngSubmit)="onSubmit(formdata.value)" class="form-horizontal utehy-form">
               <div class="modal-body no-padding">
                 <div class="form-group">
-                  <label class="col-sm-2 control-label no-padding-right"> Tên chủ đề</label>
+                  <label class="col-sm-2 control-label no-padding-right"> Tên nhà xuất bản</label>
                   <div class="col-sm-5">
-                    <input type="text" placeholder="Tên chủ đề" formControlName="tenchude"/>
-                    <div *ngIf="submitted && f.tenchude.errors" class="invalid-feedback">
-                      <div *ngIf="f.tenchude.errors.required">Tên chủ đề là bắt buộc</div>
+                    <input type="text" placeholder="Tên nhà xuất bản" formControlName="tennxb"/>
+                    <div *ngIf="submitted && f.tennxb.errors" class="invalid-feedback">
+                      <div *ngIf="f.tennxb.errors.required">Tên nhà xuất bản là bắt buộc</div>
                     </div>
                     </div>
                   </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right">Địa chỉ</label>
+                    <div class="col-sm-10">
+                      <input type="text" formControlName="diachi" placeholder="Địa chỉ" />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right">Số điện thoại</label>
+                    <div class="col-sm-10">
+                      <input type="text" formControlName="dienthoai" placeholder="Điện thoại" />
+                    </div>
+                  </div>
+                  
 
             <div class="modal-footer">
               <button type="button" class="btn btn-default btn-sm" (click)="Reset()">
